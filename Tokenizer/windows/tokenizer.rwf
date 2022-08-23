@@ -1,0 +1,725 @@
+<DocumentElement xmlns="http://tempuri.org/Ruleset.xsd">
+  <WindowControls>
+    <WindowName>tokenizer</WindowName>
+    <ControlName>btn_delete</ControlName>
+    <ZIndex>6</ZIndex>
+    <ControlClass>FGButton</ControlClass>
+    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
+      {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
+      {"Name":"AdvancedTemplate"},
+      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"ButtonCaption","Value":{"@xsi:type":"xsd:string","#text":"Delete All"}},
+      {"Name":"ButtonField"},
+      {"Name":"ButtonStateList","Value":{"@xsi:type":"ArrayOfButtonStateDefinition"}},
+      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"btn_delete"}},
+      {"Name":"CustomAnchoring","Value":{"@xsi:type":"ArrayOfAnchorDefinition"}},
+      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
+      {"Name":"DefaultValue"},
+      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"30"}},
+      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"74"}},
+      {"Name":"DiceRoll","Value":{"@xsi:type":"PropertyDiceRoll","UseModStack":{"@xsi:nil":"true"},"ResetModStack":{"@xsi:nil":"true"},"SecretRoll":{"@xsi:nil":"true"},"AllowDragDrop":{"@xsi:nil":"true"},"AdditionalInfo":null}},
+      {"Name":"Disabled"},
+      {"Name":"FontColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"FontName","Value":{"@xsi:type":"xsd:string","#text":"button-white"}},
+      {"Name":"FrameName","Value":{"@xsi:type":"xsd:string","#text":"buttonup"}},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"GMEditOnly"},
+      {"Name":"GMVisibleOnly"},
+      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"HoverCursor"},
+      {"Name":"HoverIconName"},
+      {"Name":"InheritSizePosition"},
+      {"Name":"InsertBefore"},
+      {"Name":"Invisible"},
+      {"Name":"MaximumHeight"},
+      {"Name":"MaximumWidth"},
+      {"Name":"Merge"},
+      {"Name":"MinimumHeight"},
+      {"Name":"MinimumWidth"},
+      {"Name":"NextTabTarget"},
+      {"Name":"NormalIconName","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"PressedIconName"},
+      {"Name":"PrevTabTarget"},
+      {"Name":"ReadOnly"},
+      {"Name":"RelativeMargin"},
+      {"Name":"RelativeStacking"},
+      {"Name":"ScriptFile"},
+      {"Name":"StackVertWith"},
+      {"Name":"Tooltip","Value":{"@xsi:type":"xsd:string","#text":"Delete All Tokenizer Copies and Start Over"}},
+      {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"1"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"21"}},
+      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"350"}}
+]}}</Definition>
+    <LUACode>
+function onButtonPress()
+	Interface.dialogMessage(onDialogEnd, "Are you sure you want to delete all Tokenizer copies?", "Delete All", "yesno");
+end
+
+function onDialogEnd(result)
+	if result == "yes" then
+		window.deleteAllCopies();
+	end
+end
+</LUACode>
+    <GroupIndex>0</GroupIndex>
+    <Template />
+  </WindowControls>
+  <WindowControls>
+    <WindowName>tokenizer</WindowName>
+    <ControlName>button_next</ControlName>
+    <ZIndex>1</ZIndex>
+    <ControlClass>FGButton</ControlClass>
+    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
+      {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
+      {"Name":"AdvancedTemplate"},
+      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"ButtonCaption","Value":{"@xsi:type":"xsd:string","#text":"Begin"}},
+      {"Name":"ButtonField"},
+      {"Name":"ButtonStateList","Value":{"@xsi:type":"ArrayOfButtonStateDefinition"}},
+      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"button_next"}},
+      {"Name":"CustomAnchoring","Value":{"@xsi:type":"ArrayOfAnchorDefinition"}},
+      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
+      {"Name":"DefaultValue"},
+      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"30"}},
+      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"60"}},
+      {"Name":"DiceRoll","Value":{"@xsi:type":"PropertyDiceRoll","UseModStack":{"@xsi:nil":"true"},"ResetModStack":{"@xsi:nil":"true"},"SecretRoll":{"@xsi:nil":"true"},"AllowDragDrop":{"@xsi:nil":"true"},"AdditionalInfo":null}},
+      {"Name":"Disabled"},
+      {"Name":"FontColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"FontName","Value":{"@xsi:type":"xsd:string","#text":"button-white"}},
+      {"Name":"FrameName","Value":{"@xsi:type":"xsd:string","#text":"buttonup"}},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"GMEditOnly"},
+      {"Name":"GMVisibleOnly"},
+      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"1"}},
+      {"Name":"HoverCursor"},
+      {"Name":"HoverIconName"},
+      {"Name":"InheritSizePosition"},
+      {"Name":"InsertBefore"},
+      {"Name":"Invisible"},
+      {"Name":"MaximumHeight"},
+      {"Name":"MaximumWidth"},
+      {"Name":"Merge"},
+      {"Name":"MinimumHeight"},
+      {"Name":"MinimumWidth"},
+      {"Name":"NextTabTarget"},
+      {"Name":"NormalIconName","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"PressedIconName"},
+      {"Name":"PrevTabTarget"},
+      {"Name":"ReadOnly"},
+      {"Name":"RelativeMargin"},
+      {"Name":"RelativeStacking"},
+      {"Name":"ScriptFile"},
+      {"Name":"StackVertWith"},
+      {"Name":"Tooltip"},
+      {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"1"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"375"}},
+      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"350"}}
+]}}</Definition>
+    <LUACode>
+function onButtonPress()
+	window.setNextNPCs();
+end
+</LUACode>
+    <GroupIndex>0</GroupIndex>
+    <Template />
+  </WindowControls>
+  <WindowControls>
+    <WindowName>tokenizer</WindowName>
+    <ControlName>close</ControlName>
+    <ZIndex>2</ZIndex>
+    <ControlClass>FGCustomControl</ControlClass>
+    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
+      {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
+      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"CanGrowVert"},
+      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"close"}},
+      {"Name":"CustomAnchoring","Value":{"@xsi:type":"ArrayOfAnchorDefinition"}},
+      {"Name":"CustomClassName","Value":{"@xsi:type":"xsd:string","#text":"close"}},
+      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
+      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"30"}},
+      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"30"}},
+      {"Name":"Disabled"},
+      {"Name":"FontColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"FontName","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"FrameName"},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"GMEditOnly"},
+      {"Name":"GMVisibleOnly"},
+      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"1"}},
+      {"Name":"HoverCursor"},
+      {"Name":"InheritSizePosition"},
+      {"Name":"InsertBefore"},
+      {"Name":"Invisible"},
+      {"Name":"MaximumHeight"},
+      {"Name":"MaximumWidth"},
+      {"Name":"Merge"},
+      {"Name":"MinimumHeight"},
+      {"Name":"MinimumWidth"},
+      {"Name":"NextTabTarget"},
+      {"Name":"PrevTabTarget"},
+      {"Name":"ReadOnly"},
+      {"Name":"RelativeMargin"},
+      {"Name":"RelativeStacking"},
+      {"Name":"ScriptFile"},
+      {"Name":"Source"},
+      {"Name":"StackVertWith"},
+      {"Name":"Tooltip"},
+      {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"416"}},
+      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"20"}}
+]}}</Definition>
+    <LUACode />
+    <GroupIndex>0</GroupIndex>
+    <Template />
+  </WindowControls>
+  <WindowControls>
+    <WindowName>tokenizer</WindowName>
+    <ControlName>label_title</ControlName>
+    <ZIndex>7</ZIndex>
+    <ControlClass>FGLabel</ControlClass>
+    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
+      {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
+      {"Name":"AdvancedTemplate"},
+      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"CanGrowVert"},
+      {"Name":"Center","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"label_title"}},
+      {"Name":"CustomAnchoring","Value":{"@xsi:type":"ArrayOfAnchorDefinition"}},
+      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
+      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"27"}},
+      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"413"}},
+      {"Name":"Disabled"},
+      {"Name":"FontColor","Value":{"@xsi:type":"xsd:string","#text":"255;0;0;0"}},
+      {"Name":"FontName","Value":{"@xsi:type":"xsd:string","#text":"reference-page-header"}},
+      {"Name":"FrameName"},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"GMVisibleOnly"},
+      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"2"}},
+      {"Name":"HoverCursor"},
+      {"Name":"InheritSizePosition"},
+      {"Name":"InsertBefore"},
+      {"Name":"Invisible"},
+      {"Name":"LabelCaption","Value":{"@xsi:type":"xsd:string","#text":"Tokenizer"}},
+      {"Name":"MaximumHeight"},
+      {"Name":"MaximumWidth"},
+      {"Name":"Merge"},
+      {"Name":"MinimumHeight"},
+      {"Name":"MinimumWidth"},
+      {"Name":"MultilineSpacing"},
+      {"Name":"NextTabTarget"},
+      {"Name":"PrevTabTarget"},
+      {"Name":"RelativeMargin"},
+      {"Name":"RelativeStacking"},
+      {"Name":"ScriptFile"},
+      {"Name":"StackVertWith"},
+      {"Name":"TextUnderlined"},
+      {"Name":"Tooltip"},
+      {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"25"}},
+      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"24"}}
+]}}</Definition>
+    <LUACode />
+    <GroupIndex>0</GroupIndex>
+    <Template />
+  </WindowControls>
+  <WindowControls>
+    <WindowName>tokenizer</WindowName>
+    <ControlName>resize</ControlName>
+    <ZIndex>5</ZIndex>
+    <ControlClass>FGCustomControl</ControlClass>
+    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
+      {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
+      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"CanGrowVert"},
+      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"resize"}},
+      {"Name":"CustomAnchoring","Value":{"@xsi:type":"ArrayOfAnchorDefinition"}},
+      {"Name":"CustomClassName","Value":{"@xsi:type":"xsd:string","#text":"resize"}},
+      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
+      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"20"}},
+      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"20"}},
+      {"Name":"Disabled"},
+      {"Name":"FontColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"FontName","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"FrameName"},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"GMEditOnly"},
+      {"Name":"GMVisibleOnly"},
+      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"1"}},
+      {"Name":"HoverCursor"},
+      {"Name":"InheritSizePosition"},
+      {"Name":"InsertBefore"},
+      {"Name":"Invisible"},
+      {"Name":"MaximumHeight"},
+      {"Name":"MaximumWidth"},
+      {"Name":"Merge"},
+      {"Name":"MinimumHeight"},
+      {"Name":"MinimumWidth"},
+      {"Name":"NextTabTarget"},
+      {"Name":"PrevTabTarget"},
+      {"Name":"ReadOnly"},
+      {"Name":"RelativeMargin"},
+      {"Name":"RelativeStacking"},
+      {"Name":"ScriptFile"},
+      {"Name":"Source"},
+      {"Name":"StackVertWith"},
+      {"Name":"Tooltip"},
+      {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"1"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"431"}},
+      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"372"}}
+]}}</Definition>
+    <LUACode />
+    <GroupIndex>0</GroupIndex>
+    <Template />
+  </WindowControls>
+  <WindowControls>
+    <WindowName>tokenizer</WindowName>
+    <ControlName>results</ControlName>
+    <ZIndex>3</ZIndex>
+    <ControlClass>FGSubWindow</ControlClass>
+    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
+      {"Name":"Activate","Value":{"@xsi:type":"xsd:boolean","#text":"false"}},
+      {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
+      {"Name":"AdvancedTemplate"},
+      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"CanGrowVert"},
+      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"results"}},
+      {"Name":"CustomAnchoring","Value":{"@xsi:type":"ArrayOfAnchorDefinition"}},
+      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
+      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"292"}},
+      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"413"}},
+      {"Name":"Disabled"},
+      {"Name":"FastInit","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"FrameName"},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"GMEditOnly"},
+      {"Name":"GMVisibleOnly"},
+      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"2"}},
+      {"Name":"HoverCursor"},
+      {"Name":"InheritSizePosition"},
+      {"Name":"InsertBefore"},
+      {"Name":"Invisible"},
+      {"Name":"MaximumHeight"},
+      {"Name":"MaximumWidth"},
+      {"Name":"Merge"},
+      {"Name":"MinimumHeight"},
+      {"Name":"MinimumWidth"},
+      {"Name":"NextTabTarget"},
+      {"Name":"NoScroll"},
+      {"Name":"PrevTabTarget"},
+      {"Name":"ReadOnly"},
+      {"Name":"RelativeMargin"},
+      {"Name":"RelativeStacking"},
+      {"Name":"ScriptFile"},
+      {"Name":"Source"},
+      {"Name":"StackVertWith"},
+      {"Name":"SubWindowClassName","Value":{"@xsi:type":"xsd:string","#text":"tokenizer_results"}},
+      {"Name":"Tooltip"},
+      {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"2"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"25"}},
+      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"54"}}
+]}}</Definition>
+    <LUACode />
+    <GroupIndex>0</GroupIndex>
+    <Template />
+  </WindowControls>
+  <WindowControls>
+    <WindowName>tokenizer</WindowName>
+    <ControlName>settings</ControlName>
+    <ZIndex>4</ZIndex>
+    <ControlClass>FGSubWindow</ControlClass>
+    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
+      {"Name":"Activate","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
+      {"Name":"AdvancedTemplate"},
+      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"CanGrowVert"},
+      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"settings"}},
+      {"Name":"CustomAnchoring","Value":{"@xsi:type":"ArrayOfAnchorDefinition"}},
+      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
+      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"292"}},
+      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"413"}},
+      {"Name":"Disabled"},
+      {"Name":"FastInit","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"FrameName"},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"GMEditOnly"},
+      {"Name":"GMVisibleOnly"},
+      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"2"}},
+      {"Name":"HoverCursor"},
+      {"Name":"InheritSizePosition"},
+      {"Name":"InsertBefore"},
+      {"Name":"Invisible"},
+      {"Name":"MaximumHeight"},
+      {"Name":"MaximumWidth"},
+      {"Name":"Merge"},
+      {"Name":"MinimumHeight"},
+      {"Name":"MinimumWidth"},
+      {"Name":"NextTabTarget"},
+      {"Name":"NoScroll"},
+      {"Name":"PrevTabTarget"},
+      {"Name":"ReadOnly"},
+      {"Name":"RelativeMargin"},
+      {"Name":"RelativeStacking"},
+      {"Name":"ScriptFile"},
+      {"Name":"Source"},
+      {"Name":"StackVertWith"},
+      {"Name":"SubWindowClassName","Value":{"@xsi:type":"xsd:string","#text":"tokenizer_settings"}},
+      {"Name":"Tooltip"},
+      {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"2"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"25"}},
+      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"54"}}
+]}}</Definition>
+    <LUACode />
+    <GroupIndex>0</GroupIndex>
+    <Template />
+  </WindowControls>
+  <WindowControls>
+    <WindowName>tokenizer</WindowName>
+    <ControlName>tokenizer</ControlName>
+    <ZIndex>0</ZIndex>
+    <ControlClass>FGWindow</ControlClass>
+    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
+      {"Name":"AllowResize","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"BottomMargin","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"Comments"},
+      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"tokenizer"}},
+      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
+      {"Name":"DataSource"},
+      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"400"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"460"}},
+      {"Name":"Disabled"},
+      {"Name":"Dynamic"},
+      {"Name":"FrameName","Value":{"@xsi:type":"xsd:string","#text":"utilitybox_core"}},
+      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"HostControl"},
+      {"Name":"HoverCursor"},
+      {"Name":"InheritSizePosition"},
+      {"Name":"Invisible"},
+      {"Name":"Locked"},
+      {"Name":"MaximumHeight"},
+      {"Name":"MaximumWidth"},
+      {"Name":"MergeWindow"},
+      {"Name":"MinimizedIcon"},
+      {"Name":"MinimumHeight","Value":{"@xsi:type":"xsd:int","#text":"530"}},
+      {"Name":"MinimumWidth","Value":{"@xsi:type":"xsd:int","#text":"600"}},
+      {"Name":"NoClose"},
+      {"Name":"NoDelete"},
+      {"Name":"NoMove"},
+      {"Name":"Panel"},
+      {"Name":"PanelModeClient"},
+      {"Name":"PanelModeHost"},
+      {"Name":"PanelModeLocal"},
+      {"Name":"PlayerControl"},
+      {"Name":"Resize","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"RightMargin","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"ScriptFile"},
+      {"Name":"Sharable"},
+      {"Name":"ShareAs"},
+      {"Name":"SoftClose"},
+      {"Name":"Tooltip"},
+      {"Name":"TooltipField"},
+      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"WindowTitle","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"0"}}
+]}}</Definition>
+    <LUACode>local npcPerPage = 20;
+local dbRoot = nil;
+
+local currentIndex = 1;
+local currentPage = 0;
+
+local sCategory = "Tokenizer";
+local sTokenPath = "tokens/";
+local sModuleName = "Fantasy Tokens";
+local tNpcListNames = {}
+local tNpcLists = {};
+local tAssets = {};
+local tPreferred = {};
+local tIgnored = {};
+
+function onInit()
+	-- Reset NPC index to 1
+	currentIndex = 1;
+	currentPage = 0;
+	
+	-- Init assets
+	tAssets = Interface.getAssets("token", "tokens");
+end
+
+function setNextNPCs()
+	-- Close current page results
+	results.subwindow.results.closeAll();
+	
+	getSettings();
+	
+	button_next.setText("Next");
+	
+	-- Get the next npcPerPage NPCs from the entire DB of NPCs,
+	-- Copy those NPCs, set a token based on name from module	
+	local currentIndex = 0;
+	
+	-- Increment index until we get to currentPage * npcPerPage;
+	local targetIndexStart = currentPage * npcPerPage;
+	
+	local numAdded = 0;
+	
+	-- npc first then reference.npcs
+	for _, npcList in pairs(tNpcLists) do
+		if npcList ~= nil then
+			for _, nodeNpc in pairs(npcList) do
+				-- COPY NPC and set name and category
+				if nodeNpc ~= nil and currentIndex &gt;= targetIndexStart then
+					local sNpcCategory = DB.getCategory(nodeNpc);
+					-- Ignore those w/ tokenizer category
+					if sNpcCategory ~= sCategory then
+						copyNpc(nodeNpc, sCategory);
+						numAdded = numAdded + 1;
+					end
+				end
+				-- Increment total, break if numAdded &gt; npcPerPage
+				currentIndex = currentIndex + 1;
+				if numAdded &gt;= npcPerPage then
+					currentPage = currentPage + 1;
+					return;
+				end
+			end
+		end
+	end
+	
+	currentPage = currentPage + 1;
+end
+
+function getSettings()
+	npcPerPage = settings.subwindow.per_page.getValue();
+	sCategory = settings.subwindow.npc_category.getValue();
+	tNpcListNames = StringManager.split(settings.subwindow.db_paths.getValue(), ",", true);
+	tPreferred = StringManager.split(settings.subwindow.preferred_folders.getValue():lower(), ",", true);
+	tIgnored = StringManager.split(settings.subwindow.ignored_folders.getValue():lower(), ",", true);
+	
+	-- Always ignore letter tokens
+	table.insert(tIgnored, "letter tokens");
+	table.insert(tIgnored, "lettertokens");
+	
+	-- Get lists from db paths names
+	dbRoot = DB.getRoot();
+	
+	tNpcLists = {};
+	for _,sList in pairs(tNpcListNames) do
+		local tList = DB.getChildrenGlobal(dbRoot, sList);
+		table.insert(tNpcLists, tList);
+	end
+	
+	settings.setVisible(false);
+	results.setVisible(true);
+end
+
+function copyNpc(nodeNpc, sCategoryName)
+	local newNpc = DB.createChild(DB.getPath(dbRoot, "npc"));
+	DB.copyNode(nodeNpc, newNpc);
+	
+	-- Set category
+	DB.setCategory(newNpc, sCategoryName);
+	
+	-- Set token
+	local sName = DB.getValue(newNpc, "name", "");
+	
+	local sTokenFilename = searchAssets(sName);
+
+	-- Lock the token by default
+	DB.setValue(newNpc, "locked", "number", 1);
+		
+	-- If we found a tolen
+	if sTokenFilename ~= "" then
+		DB.setValue(newNpc, "token", "token", sTokenFilename);
+	end
+
+	-- Add to the results
+	results.subwindow.results.createWindow(newNpc);
+end
+
+function deleteAllCopies()
+	-- Update lists
+	sCategory = settings.subwindow.npc_category.getValue();
+	tNpcListNames = StringManager.split(settings.subwindow.db_paths.getValue(), ",", true);
+	dbRoot = DB.getRoot();
+	
+	tNpcLists = {};
+	for _,sList in pairs(tNpcListNames) do
+		local tList = DB.getChildrenGlobal(dbRoot, sList);
+		table.insert(tNpcLists, tList);
+	end
+	
+	for _, npcList in pairs(tNpcLists) do
+		if npcList ~= nil then
+			for _, nodeNpc in pairs(npcList) do
+				-- Delete NPC if in the same category
+				if nodeNpc ~= nil then
+					local sNpcCategory = DB.getCategory(nodeNpc);
+					if sNpcCategory == sCategory then
+						DB.deleteNode(nodeNpc);
+					end
+				end
+			end
+		end
+	end
+	
+	currentPage = 0;
+	settings.setVisible(true);
+	results.setVisible(false);
+end
+
+function basename(path)
+  return path:sub(path:find("/[^/]*$") + 1)
+end
+
+-- Search all assets for a similar name
+function searchAssets(sName)
+	-- Before searching, lowercase the name and strip special characters and numbers
+	sName = sName:lower():gsub("[^%w]+", ""):gsub("%d+", "");
+	
+	local potentialMatch = "";
+	local potentialMatchStartsWith = "";
+	local potentialMatchContains = "";
+	local potentialMatchEndsWith = "";
+	
+	local hasPreferences = #tPreferred &gt; 0;
+	local foundPreferredType = "";
+
+	for _, sAsset in pairs(tAssets) do 
+		local sAssetNameFull = sAsset:lower();
+		
+		-- First strip everything except what's after the last "/" to get the file name
+		local sAssetCopy = basename(sAssetNameFull);
+		-- Next, remove trailing `@&lt;module&gt;`
+		sAssetCopy = sAssetCopy:gsub("@.+", "");
+		-- Then, Remove whitespace, numbers, special characters, and extensions prior to comparison
+		sAssetCopy = sAssetCopy:gsub(".jpg", ""):gsub(".jpeg", ""):gsub(".png", ""):gsub("[^%w]+", ""):gsub("%d+", "");
+		
+		local hasFoundPreferred = false;
+		
+		-- If this is ignored, skip it
+		local isIgnored = false;
+		
+		-- Always ignore assets with just one letter in the name (letter tokens are like this)
+		isIgnored = string.len(sAssetCopy) == 1 ;
+		
+		for _, ignored in pairs(tIgnored) do
+			if string.match(sAssetNameFull, "/" .. ignored .. "/") or string.match(sAssetNameFull, "@" .. ignored) then
+				isIgnored = true;
+			end
+		end
+		
+		if not isIgnored then
+			-- Check if it is preferred folder?
+			local preferredIndex = 0;	
+			for _, preferred in pairs(tPreferred) do
+				preferredIndex = preferredIndex + 1;
+				-- Only set preferred index if lower than previous found
+				if not hasFoundPreferred  and
+					(string.match(sAssetNameFull, "/" .. preferred .. "/") or string.match(sAssetNameFull, "@" .. preferred)) then
+					hasFoundPreferred = true;
+				end
+			end
+
+			-- Direct copy, just return unless there are preferred folders
+			if not hasPreferences and sAssetCopy == sName then
+				return sAsset;
+			elseif hasPreferences and sAssetCopy == sName and potentialMatch == "" then 
+				potentialMatch = sAsset;
+				if hasFoundPreferred then
+					foundPreferredType = "match";
+				end
+			end
+			
+			-- If exact match and found in preferred dir, just return
+			if hasFoundPreferred and sAssetCopy == sName then
+				return sAsset;
+			end
+			
+			if StringManager.startsWith(sAssetCopy, sName) then
+				-- If there's preferences, only override if hasFoundPreferred
+				if hasPreferences and hasFoundPreferred then
+					potentialMatchStartsWith = sAsset;
+					foundPreferredType = "startsWith";
+				elseif not hasPreferences or (hasPreferences and potentialMatchStartsWith == "") then
+					potentialMatchStartsWith = sAsset;
+				end
+			elseif endsWith(sAssetCopy, sName) then
+				if hasPreferences and hasFoundPreferred then
+					potentialMatchEndWith = sAsset;
+					foundPreferredType = "endsWith";
+				elseif not hasPreferences or (hasPreferences and potentialMatchEndWith == "") then
+					potentialMatchEndWith = sAsset;
+				end
+			end
+			
+			-- Prefer if asset name contains the creature name first
+			if string.find(sAssetCopy, sName) then
+				if hasPreferences and hasFoundPreferred then
+					potentialMatchContains = sAsset;
+					foundPreferredType = "contains";
+				elseif potentialMatchContains == "" then
+					potentialMatchContains = sAsset;
+				end
+			-- Prefer if creature name contains asset name name lastly
+			elseif string.find(sName, sAssetCopy) then
+				if hasPreferences and hasFoundPreferred then
+					potentialMatchContains = sAsset;
+					foundPreferredType = "contains";
+				elseif potentialMatchContains == "" then
+					potentialMatchContains = sAsset;
+				end
+			end		
+		end
+	end
+	
+	-- If found preferred, return in order of type
+	if foundPreferredType ~= "" then
+		if foundPreferredType == "match" then
+			return potentialMatch;
+		elseif foundPreferredType == "startsWith" then
+			return potentialMatchStartsWith;
+		elseif foundPreferredType == "contains" then
+			return potentialMatchContains;
+		end
+		-- endsWith is default
+		return potentialMatchEndsWith;
+	end
+	
+	-- Didn't find exact match, pick from above
+	if potentialMatch ~= "" then
+		return potentialMatch;
+	elseif potentialMatchStartsWith ~= "" then
+		return potentialMatchStartsWith;
+	elseif potentialMatchContains ~= "" then
+		return potentialMatchContains;
+	elseif potentialMatchEndsWith ~= "" then
+		return potentialMatchEndsWith;
+	else
+		return "";
+	end
+end
+
+function endsWith(str, ending)
+   return ending == "" or str:sub(-#ending) == ending
+end</LUACode>
+    <GroupIndex>0</GroupIndex>
+    <Template />
+  </WindowControls>
+</DocumentElement>

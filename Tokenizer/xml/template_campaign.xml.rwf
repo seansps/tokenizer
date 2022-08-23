@@ -1,0 +1,23 @@
+<DocumentElement xmlns="http://tempuri.org/Ruleset.xsd">
+  <XMLFiles>
+    <XmlName>template_campaign.xml</XmlName>
+    <FolderID>1</FolderID>
+    <XML>&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;
+&lt;root&gt;
+	&lt;template name="button_tokenizer"&gt;
+		&lt;button_masterindex_option&gt;
+			&lt;script&gt;
+				function onButtonPress()
+					Interface.openWindow("tokenizer", "tokenizer");
+				end
+				
+				function onInit()
+					setText(Interface.getString("library_recordview_label_tokenizer"));
+				end
+			&lt;/script&gt;
+		&lt;/button_masterindex_option&gt;
+	&lt;/template&gt;
+&lt;/root&gt;      
+    </XML>
+  </XMLFiles>
+</DocumentElement>
