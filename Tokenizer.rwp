@@ -53,10 +53,6 @@
 
 <DocumentElement xmlns="http://tempuri.org/Ruleset.xsd">
   <Windows>
-    <Name>NewWindow</Name>
-    <FolderID>1</FolderID>
-  </Windows>
-  <Windows>
     <Name>tokenizer</Name>
     <FolderID>1</FolderID>
   </Windows>
@@ -75,61 +71,6 @@
 </DocumentElement>
 
 <DocumentElement xmlns="http://tempuri.org/Ruleset.xsd">
-  <WindowControls>
-    <WindowName>NewWindow</WindowName>
-    <ControlName>NewWindow</ControlName>
-    <ZIndex>0</ZIndex>
-    <ControlClass>FGWindow</ControlClass>
-    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
-      {"Name":"AllowResize"},
-      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
-      {"Name":"BottomMargin","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"Comments"},
-      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"NewWindow"}},
-      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
-      {"Name":"DataSource"},
-      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"300"}},
-      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"300"}},
-      {"Name":"Disabled"},
-      {"Name":"Dynamic"},
-      {"Name":"FrameName"},
-      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"HostControl"},
-      {"Name":"HoverCursor"},
-      {"Name":"InheritSizePosition"},
-      {"Name":"Invisible"},
-      {"Name":"Locked"},
-      {"Name":"MaximumHeight"},
-      {"Name":"MaximumWidth"},
-      {"Name":"MergeWindow"},
-      {"Name":"MinimizedIcon"},
-      {"Name":"MinimumHeight"},
-      {"Name":"MinimumWidth"},
-      {"Name":"NoClose"},
-      {"Name":"NoDelete"},
-      {"Name":"NoMove"},
-      {"Name":"Panel"},
-      {"Name":"PanelModeClient"},
-      {"Name":"PanelModeHost"},
-      {"Name":"PanelModeLocal"},
-      {"Name":"PlayerControl"},
-      {"Name":"Resize","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"RightMargin","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"ScriptFile"},
-      {"Name":"Sharable"},
-      {"Name":"ShareAs"},
-      {"Name":"SoftClose"},
-      {"Name":"Tooltip"},
-      {"Name":"TooltipField"},
-      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"WindowTitle"},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"0"}}
-]}}</Definition>
-    <LUACode />
-    <GroupIndex>0</GroupIndex>
-    <Template />
-  </WindowControls>
   <WindowControls>
     <WindowName>tokenizer</WindowName>
     <ControlName>btn_delete</ControlName>
@@ -484,8 +425,8 @@ end
       {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"413"}},
       {"Name":"Disabled"},
       {"Name":"FastInit","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
-      {"Name":"FrameName"},
-      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"FrameName","Value":{"@xsi:type":"xsd:string","#text":"groupbox"}},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string","#text":"10,10,10,10"}},
       {"Name":"GMEditOnly"},
       {"Name":"GMVisibleOnly"},
       {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"2"}},
@@ -582,6 +523,7 @@ local tNpcLists = {};
 local tAssets = {};
 local tPreferred = {};
 local tIgnored = {};
+local hasSettings = false;
 
 -- Currently exported modules have issues if two files have the same basename
 -- To get around this, map basenames to sAssetPaths, so we know if we've used one 
@@ -592,9 +534,11 @@ function onInit()
 	-- Reset NPC index to 1
 	currentPage = 0;
 	tBaseNames = {};
-	
+	tNpcLists = {};
+	tIgnored = {}
 	-- Init assets
-	tAssets = Interface.getAssets("token", "tokens");
+	tAssets = {};
+	hasSettings = false;
 end
 
 function setNextNPCs()
@@ -620,7 +564,7 @@ function setNextNPCs()
 			for _, nodeNpc in pairs(npcList) do
 				-- COPY NPC and set name and category
 				if nodeNpc ~= nil and currentIndex &gt;= targetIndexStart then
-					local sNpcCategory = DB.getCategory(nodeNpc);
+					local sNpcCategory = nodeNpc.getCategory();
 					-- Ignore those w/ tokenizer category
 					if sNpcCategory ~= sCategory then
 						copyNpc(nodeNpc, sCategory);
@@ -641,27 +585,37 @@ function setNextNPCs()
 end
 
 function getSettings()
-	npcPerPage = settings.subwindow.per_page.getValue();
-	sCategory = settings.subwindow.npc_category.getValue();
-	tNpcListNames = StringManager.split(settings.subwindow.db_paths.getValue(), ",", true);
-	tPreferred = StringManager.split(settings.subwindow.preferred_folders.getValue():lower(), ",", true);
-	tIgnored = StringManager.split(settings.subwindow.ignored_folders.getValue():lower(), ",", true);
-	
-	-- Always ignore letter tokens
-	table.insert(tIgnored, "letter tokens");
-	table.insert(tIgnored, "lettertokens");
-	
-	-- Get lists from db paths names
-	dbRoot = DB.getRoot();
-	
-	tNpcLists = {};
-	for _,sList in pairs(tNpcListNames) do
-		local tList = DB.getChildrenGlobal(dbRoot, sList);
-		table.insert(tNpcLists, tList);
+	if not hasSettings then
+		npcPerPage = settings.subwindow.per_page.getValue();
+		sCategory = settings.subwindow.npc_category.getValue();
+		tNpcListNames = StringManager.split(settings.subwindow.db_paths.getValue(), ",", true);
+		tPreferred = StringManager.split(settings.subwindow.preferred_folders.getValue():lower(), ",", true);
+		tIgnored = StringManager.split(settings.subwindow.ignored_folders.getValue():lower(), ",", true);
+		
+		-- Always ignore letter tokens
+		table.insert(tIgnored, "letter tokens");
+		table.insert(tIgnored, "lettertokens");
+		
+		-- Get lists from db paths names
+		dbRoot = DB.getRoot();
+
+		tNpcLists = {};
+		for _,sList in pairs(tNpcListNames) do
+			local tList = DB.getChildrenGlobal(dbRoot, sList);
+			table.insert(tNpcLists, tList);
+		end
+		
+		tAssets = {};
+		if settings.subwindow.only_campaign.getValue() == 1 then
+			tAssets = Interface.getAssets("image", "campaign/images");
+		else
+			tAssets = Interface.getAssets("token", "tokens");
+		end
+		
+		settings.setVisible(false);
+		results.setVisible(true);
+		hasSettings = true;
 	end
-	
-	settings.setVisible(false);
-	results.setVisible(true);
 end
 
 function copyNpc(nodeNpc, sCategoryName)
@@ -716,17 +670,22 @@ function deleteAllCopies()
 	
 	currentPage = 0;
 	tBaseNames = {};
+	hasSettings = false;
 	settings.setVisible(true);
 	results.setVisible(false);
+	button_next.setText("Begin");
 end
 
 function basename(path)
-  return path:sub(path:find("/[^/]*$") + 1)
+  return path:sub(path:find("/[^/]*$") + 1);
 end
 
 -- Search all assets for a similar name
 function searchAssets(sName)
-	-- Before searching, lowercase the name and strip special characters and numbers
+	-- First, split the name into a list of possible "words" so we can compare all words in an asset
+	local tCreatureNameWords = getWordsIn(sName);
+
+	-- Then before searching, lowercase the name and strip special characters and numbers with no replacement
 	sName = sName:lower():gsub("[^%w]+", ""):gsub("%d+", "");
 	
 	local potentialMatch = "";
@@ -737,6 +696,8 @@ function searchAssets(sName)
 	local hasPreferences = #tPreferred &gt; 0;
 	local foundPreferredType = "";
 
+	local numWordMatches = 0;
+	
 	for _, sAsset in pairs(tAssets) do 
 		-- If we've already used an asset with the existing name, switch to that, to prevent collision issues in modules
 		if tBaseNames[basename(sAsset):lower()] ~= nil then
@@ -750,7 +711,13 @@ function searchAssets(sName)
 		-- Next, remove trailing `@&lt;module&gt;`
 		sAssetCopy = sAssetCopy:gsub("@.+", "");
 		-- Then, Remove whitespace, numbers, special characters, and extensions prior to comparison
-		sAssetCopy = sAssetCopy:gsub(".jpg", ""):gsub(".jpeg", ""):gsub(".png", ""):gsub("[^%w]+", ""):gsub("%d+", "");
+		sAssetCopy = sAssetCopy:gsub(".jpg", ""):gsub(".jpeg", ""):gsub(".png", "");
+		
+		-- Get the words in the basename of the asset
+		local tAssetWords = getWordsIn(sAssetCopy);
+		
+		-- Then strip numbers and specials
+		sAssetCopy = sAssetCopy:gsub("[^%w]+", ""):gsub("%d+", "");
 		
 		local hasFoundPreferred = false;
 		
@@ -812,6 +779,8 @@ function searchAssets(sName)
 				end
 			end
 			
+			local nNumMatches, bAllMatch = getNumWordMatch(tAssetWords, tCreatureNameWords);
+			
 			-- Prefer if asset name contains the creature name first
 			if string.find(sAssetCopy, sName) then
 				if hasPreferences and hasFoundPreferred then
@@ -820,15 +789,22 @@ function searchAssets(sName)
 				elseif potentialMatchContains == "" then
 					potentialMatchContains = sAsset;
 				end
-			-- Prefer if creature name contains asset name name lastly
-			elseif string.find(sName, sAssetCopy) then
+			-- Then prefer if asset name contains all of the creature's words in any order
+			elseif bAllMatch then
 				if hasPreferences and hasFoundPreferred then
 					potentialMatchContains = sAsset;
 					foundPreferredType = "contains";
 				elseif potentialMatchContains == "" then
 					potentialMatchContains = sAsset;
 				end
-			end		
+			-- If not set and SOME match
+			elseif nNumMatches &gt; numWordMatches then
+				if hasPreferences and hasFoundPreferred then
+					foundPreferredType = "contains";
+				end
+				numWordMatches = nNumMatches;
+				potentialMatchContains = sAsset;
+			end
 		end
 	end
 	
@@ -868,6 +844,42 @@ end
 
 function endsWith(str, ending)
    return ending == "" or str:sub(-#ending) == ending
+end
+
+function getWordsIn(sString)
+	local tWords = {};
+	-- Replace specials and numbers with spaces
+	local sStringNoSpecial = sString:lower():gsub("[^%w]+", " "):gsub("%d+", " ");
+	for word in sStringNoSpecial:gmatch("%w+") do 
+		-- Scrap words that are less than two characters
+		if string.len(word) &gt;= 2 then
+			table.insert(tWords, word);
+		end
+	end
+	return tWords;
+end
+
+-- Returns the number of words in tWords1 also in tWords2, returns true if the tWords1 contains all strings in tWords2
+function getNumWordMatch(tWords1, tWords2)
+	local foundCount = 0;
+	local wordCount = #tWords2;
+	
+	for _, word in pairs(tWords2) do
+		if getHasWord(tWords1, word) then
+			foundCount = foundCount + 1;
+		end
+	end
+	
+	return foundCount, (wordCount &gt; 0 and foundCount == wordCount);
+end
+
+function getHasWord(tWords, sWord)
+	for _, word in pairs(tWords) do
+		if word == sWord then
+			return true;
+		end
+	end
+	return false;
 end</LUACode>
     <GroupIndex>0</GroupIndex>
     <Template />
@@ -1318,7 +1330,7 @@ end
       {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"298"}},
       {"Name":"Disabled"},
       {"Name":"EmptyListFontName","Value":{"@xsi:type":"xsd:string","#text":"reference-i"}},
-      {"Name":"EmptyListText","Value":{"@xsi:type":"xsd:string","#text":"No NPCs Found"}},
+      {"Name":"EmptyListText","Value":{"@xsi:type":"xsd:string","#text":"No More NPCs Found"}},
       {"Name":"Fields"},
       {"Name":"FrameName","Value":{"@xsi:type":"xsd:string","#text":"groupbox"}},
       {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string","#text":"10,10,10,10"}},
@@ -1465,7 +1477,7 @@ end
       {"Name":"Tooltip","Value":{"@xsi:type":"xsd:string","#text":"The paths to NPCs used by the current ruleset"}},
       {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"141"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"146"}},
       {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"25"}}
 ]}}</Definition>
     <LUACode />
@@ -1526,7 +1538,7 @@ end
       {"Name":"Tooltip","Value":{"@xsi:type":"xsd:string","#text":"If set, ignore tokens found in these folders or modules"}},
       {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"141"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"146"}},
       {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"71"}}
 ]}}</Definition>
     <LUACode />
@@ -1578,7 +1590,7 @@ end
       {"Name":"Tooltip"},
       {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"5"}},
       {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"4"}}
 ]}}</Definition>
     <LUACode />
@@ -1630,8 +1642,60 @@ end
       {"Name":"Tooltip"},
       {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"5"}},
       {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"75"}}
+]}}</Definition>
+    <LUACode />
+    <GroupIndex>0</GroupIndex>
+    <Template />
+  </WindowControls>
+  <WindowControls>
+    <WindowName>tokenizer_settings</WindowName>
+    <ControlName>label_only_campaign</ControlName>
+    <ZIndex>15</ZIndex>
+    <ControlClass>FGLabel</ControlClass>
+    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
+      {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
+      {"Name":"AdvancedTemplate"},
+      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"CanGrowVert"},
+      {"Name":"Center"},
+      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"label_only_campaign"}},
+      {"Name":"CustomAnchoring","Value":{"@xsi:type":"ArrayOfAnchorDefinition"}},
+      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
+      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"20"}},
+      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"138"}},
+      {"Name":"Disabled"},
+      {"Name":"FontColor","Value":{"@xsi:type":"xsd:string","#text":"255;0;0;0"}},
+      {"Name":"FontName","Value":{"@xsi:type":"xsd:string","#text":"reference-b"}},
+      {"Name":"FrameName","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"GMVisibleOnly"},
+      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"HoverCursor"},
+      {"Name":"InheritSizePosition"},
+      {"Name":"InsertBefore"},
+      {"Name":"Invisible"},
+      {"Name":"LabelCaption","Value":{"@xsi:type":"xsd:string","#text":"Only Check Campaign"}},
+      {"Name":"MaximumHeight"},
+      {"Name":"MaximumWidth"},
+      {"Name":"Merge"},
+      {"Name":"MinimumHeight"},
+      {"Name":"MinimumWidth"},
+      {"Name":"MultilineSpacing"},
+      {"Name":"NextTabTarget"},
+      {"Name":"PrevTabTarget"},
+      {"Name":"RelativeMargin","Value":{"@xsi:type":"xsd:int","#text":"5"}},
+      {"Name":"RelativeStacking"},
+      {"Name":"ScriptFile"},
+      {"Name":"StackVertWith","Value":{"@xsi:type":"xsd:string","#text":"preferred_folders"}},
+      {"Name":"TextUnderlined"},
+      {"Name":"Tooltip"},
+      {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"5"}},
+      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"124"}}
 ]}}</Definition>
     <LUACode />
     <GroupIndex>0</GroupIndex>
@@ -1682,7 +1746,7 @@ end
       {"Name":"Tooltip"},
       {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"5"}},
       {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"52"}}
 ]}}</Definition>
     <LUACode />
@@ -1734,7 +1798,7 @@ end
       {"Name":"Tooltip"},
       {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"5"}},
       {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"28"}}
 ]}}</Definition>
     <LUACode />
@@ -1786,7 +1850,7 @@ end
       {"Name":"Tooltip"},
       {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"5"}},
       {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"101"}}
 ]}}</Definition>
     <LUACode />
@@ -1847,8 +1911,59 @@ end
       {"Name":"Tooltip","Value":{"@xsi:type":"xsd:string","#text":"Category name to place copies in"}},
       {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"141"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"146"}},
       {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"0"}}
+]}}</Definition>
+    <LUACode />
+    <GroupIndex>0</GroupIndex>
+    <Template />
+  </WindowControls>
+  <WindowControls>
+    <WindowName>tokenizer_settings</WindowName>
+    <ControlName>only_campaign</ControlName>
+    <ZIndex>17</ZIndex>
+    <ControlClass>FGCheckbox</ControlClass>
+    <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
+      {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
+      {"Name":"AdvancedTemplate"},
+      {"Name":"BackgroundColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
+      {"Name":"ControlName","Value":{"@xsi:type":"xsd:string","#text":"only_campaign"}},
+      {"Name":"CustomAnchoring","Value":{"@xsi:type":"ArrayOfAnchorDefinition"}},
+      {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
+      {"Name":"DefaultChecked","Value":{"@xsi:type":"xsd:boolean","#text":"false"}},
+      {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"20"}},
+      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"20"}},
+      {"Name":"Disabled"},
+      {"Name":"FrameName"},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"GMEditOnly"},
+      {"Name":"GMVisibleOnly"},
+      {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"HoverCursor"},
+      {"Name":"InheritSizePosition"},
+      {"Name":"InsertBefore"},
+      {"Name":"Invisible"},
+      {"Name":"MaximumHeight"},
+      {"Name":"MaximumWidth"},
+      {"Name":"Merge"},
+      {"Name":"MinimumHeight"},
+      {"Name":"MinimumWidth"},
+      {"Name":"NextTabTarget"},
+      {"Name":"OffStateIcon"},
+      {"Name":"OnStateIcon"},
+      {"Name":"PrevTabTarget"},
+      {"Name":"ReadOnly"},
+      {"Name":"RelativeMargin","Value":{"@xsi:type":"xsd:int","#text":"5"}},
+      {"Name":"RelativeStacking"},
+      {"Name":"ScriptFile"},
+      {"Name":"Source"},
+      {"Name":"StackVertWith","Value":{"@xsi:type":"xsd:string","#text":"preferred_folders"}},
+      {"Name":"Tooltip","Value":{"@xsi:type":"xsd:string","#text":"If checked, only looks for tokens in this campaign's \"images\" folder"}},
+      {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"149"}},
+      {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"124"}}
 ]}}</Definition>
     <LUACode />
     <GroupIndex>0</GroupIndex>
@@ -1909,7 +2024,7 @@ end
       {"Name":"Tooltip","Value":{"@xsi:type":"xsd:string","#text":"Number of NPCs per page to copy and set tokens"}},
       {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"141"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"146"}},
       {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"48"}}
 ]}}</Definition>
     <LUACode>
@@ -1975,7 +2090,7 @@ end
       {"Name":"Tooltip","Value":{"@xsi:type":"xsd:string","#text":"If set, prefer tokens from the specified folders or modules over others"}},
       {"Name":"UseAsTemplate","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"VerticalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
-      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"141"}},
+      {"Name":"XPos","Value":{"@xsi:type":"xsd:int","#text":"146"}},
       {"Name":"YPos","Value":{"@xsi:type":"xsd:int","#text":"97"}}
 ]}}</Definition>
     <LUACode />
@@ -1996,10 +2111,10 @@ end
       {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
       {"Name":"DataSource"},
       {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"302"}},
-      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"307"}},
+      {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"311"}},
       {"Name":"Disabled"},
       {"Name":"Dynamic"},
-      {"Name":"FrameName"},
+      {"Name":"FrameName","Value":{"@xsi:type":"xsd:string"}},
       {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"0"}},
       {"Name":"HostControl"},
       {"Name":"HoverCursor"},

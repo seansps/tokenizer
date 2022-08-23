@@ -22,7 +22,7 @@
       {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"298"}},
       {"Name":"Disabled"},
       {"Name":"EmptyListFontName","Value":{"@xsi:type":"xsd:string","#text":"reference-i"}},
-      {"Name":"EmptyListText","Value":{"@xsi:type":"xsd:string","#text":"No NPCs Found"}},
+      {"Name":"EmptyListText","Value":{"@xsi:type":"xsd:string","#text":"No More NPCs Found"}},
       {"Name":"Fields"},
       {"Name":"FrameName","Value":{"@xsi:type":"xsd:string","#text":"groupbox"}},
       {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string","#text":"10,10,10,10"}},

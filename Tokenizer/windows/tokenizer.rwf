@@ -353,8 +353,8 @@ end
       {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"413"}},
       {"Name":"Disabled"},
       {"Name":"FastInit","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
-      {"Name":"FrameName"},
-      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string"}},
+      {"Name":"FrameName","Value":{"@xsi:type":"xsd:string","#text":"groupbox"}},
+      {"Name":"FrameOffset","Value":{"@xsi:type":"xsd:string","#text":"10,10,10,10"}},
       {"Name":"GMEditOnly"},
       {"Name":"GMVisibleOnly"},
       {"Name":"HorizontalAnchor","Value":{"@xsi:type":"xsd:int","#text":"2"}},
@@ -451,6 +451,7 @@ local tNpcLists = {};
 local tAssets = {};
 local tPreferred = {};
 local tIgnored = {};
+local hasSettings = false;
 
 -- Currently exported modules have issues if two files have the same basename
 -- To get around this, map basenames to sAssetPaths, so we know if we've used one 
@@ -461,9 +462,11 @@ function onInit()
 	-- Reset NPC index to 1
 	currentPage = 0;
 	tBaseNames = {};
-	
+	tNpcLists = {};
+	tIgnored = {}
 	-- Init assets
-	tAssets = Interface.getAssets("token", "tokens");
+	tAssets = {};
+	hasSettings = false;
 end
 
 function setNextNPCs()
@@ -489,7 +492,7 @@ function setNextNPCs()
 			for _, nodeNpc in pairs(npcList) do
 				-- COPY NPC and set name and category
 				if nodeNpc ~= nil and currentIndex &gt;= targetIndexStart then
-					local sNpcCategory = DB.getCategory(nodeNpc);
+					local sNpcCategory = nodeNpc.getCategory();
 					-- Ignore those w/ tokenizer category
 					if sNpcCategory ~= sCategory then
 						copyNpc(nodeNpc, sCategory);
@@ -510,27 +513,37 @@ function setNextNPCs()
 end
 
 function getSettings()
-	npcPerPage = settings.subwindow.per_page.getValue();
-	sCategory = settings.subwindow.npc_category.getValue();
-	tNpcListNames = StringManager.split(settings.subwindow.db_paths.getValue(), ",", true);
-	tPreferred = StringManager.split(settings.subwindow.preferred_folders.getValue():lower(), ",", true);
-	tIgnored = StringManager.split(settings.subwindow.ignored_folders.getValue():lower(), ",", true);
-	
-	-- Always ignore letter tokens
-	table.insert(tIgnored, "letter tokens");
-	table.insert(tIgnored, "lettertokens");
-	
-	-- Get lists from db paths names
-	dbRoot = DB.getRoot();
-	
-	tNpcLists = {};
-	for _,sList in pairs(tNpcListNames) do
-		local tList = DB.getChildrenGlobal(dbRoot, sList);
-		table.insert(tNpcLists, tList);
+	if not hasSettings then
+		npcPerPage = settings.subwindow.per_page.getValue();
+		sCategory = settings.subwindow.npc_category.getValue();
+		tNpcListNames = StringManager.split(settings.subwindow.db_paths.getValue(), ",", true);
+		tPreferred = StringManager.split(settings.subwindow.preferred_folders.getValue():lower(), ",", true);
+		tIgnored = StringManager.split(settings.subwindow.ignored_folders.getValue():lower(), ",", true);
+		
+		-- Always ignore letter tokens
+		table.insert(tIgnored, "letter tokens");
+		table.insert(tIgnored, "lettertokens");
+		
+		-- Get lists from db paths names
+		dbRoot = DB.getRoot();
+
+		tNpcLists = {};
+		for _,sList in pairs(tNpcListNames) do
+			local tList = DB.getChildrenGlobal(dbRoot, sList);
+			table.insert(tNpcLists, tList);
+		end
+		
+		tAssets = {};
+		if settings.subwindow.only_campaign.getValue() == 1 then
+			tAssets = Interface.getAssets("image", "campaign/images");
+		else
+			tAssets = Interface.getAssets("token", "tokens");
+		end
+		
+		settings.setVisible(false);
+		results.setVisible(true);
+		hasSettings = true;
 	end
-	
-	settings.setVisible(false);
-	results.setVisible(true);
 end
 
 function copyNpc(nodeNpc, sCategoryName)
@@ -585,17 +598,22 @@ function deleteAllCopies()
 	
 	currentPage = 0;
 	tBaseNames = {};
+	hasSettings = false;
 	settings.setVisible(true);
 	results.setVisible(false);
+	button_next.setText("Begin");
 end
 
 function basename(path)
-  return path:sub(path:find("/[^/]*$") + 1)
+  return path:sub(path:find("/[^/]*$") + 1);
 end
 
 -- Search all assets for a similar name
 function searchAssets(sName)
-	-- Before searching, lowercase the name and strip special characters and numbers
+	-- First, split the name into a list of possible "words" so we can compare all words in an asset
+	local tCreatureNameWords = getWordsIn(sName);
+
+	-- Then before searching, lowercase the name and strip special characters and numbers with no replacement
 	sName = sName:lower():gsub("[^%w]+", ""):gsub("%d+", "");
 	
 	local potentialMatch = "";
@@ -606,6 +624,8 @@ function searchAssets(sName)
 	local hasPreferences = #tPreferred &gt; 0;
 	local foundPreferredType = "";
 
+	local numWordMatches = 0;
+	
 	for _, sAsset in pairs(tAssets) do 
 		-- If we've already used an asset with the existing name, switch to that, to prevent collision issues in modules
 		if tBaseNames[basename(sAsset):lower()] ~= nil then
@@ -619,7 +639,13 @@ function searchAssets(sName)
 		-- Next, remove trailing `@&lt;module&gt;`
 		sAssetCopy = sAssetCopy:gsub("@.+", "");
 		-- Then, Remove whitespace, numbers, special characters, and extensions prior to comparison
-		sAssetCopy = sAssetCopy:gsub(".jpg", ""):gsub(".jpeg", ""):gsub(".png", ""):gsub("[^%w]+", ""):gsub("%d+", "");
+		sAssetCopy = sAssetCopy:gsub(".jpg", ""):gsub(".jpeg", ""):gsub(".png", "");
+		
+		-- Get the words in the basename of the asset
+		local tAssetWords = getWordsIn(sAssetCopy);
+		
+		-- Then strip numbers and specials
+		sAssetCopy = sAssetCopy:gsub("[^%w]+", ""):gsub("%d+", "");
 		
 		local hasFoundPreferred = false;
 		
@@ -681,6 +707,8 @@ function searchAssets(sName)
 				end
 			end
 			
+			local nNumMatches, bAllMatch = getNumWordMatch(tAssetWords, tCreatureNameWords);
+			
 			-- Prefer if asset name contains the creature name first
 			if string.find(sAssetCopy, sName) then
 				if hasPreferences and hasFoundPreferred then
@@ -689,15 +717,22 @@ function searchAssets(sName)
 				elseif potentialMatchContains == "" then
 					potentialMatchContains = sAsset;
 				end
-			-- Prefer if creature name contains asset name name lastly
-			elseif string.find(sName, sAssetCopy) then
+			-- Then prefer if asset name contains all of the creature's words in any order
+			elseif bAllMatch then
 				if hasPreferences and hasFoundPreferred then
 					potentialMatchContains = sAsset;
 					foundPreferredType = "contains";
 				elseif potentialMatchContains == "" then
 					potentialMatchContains = sAsset;
 				end
-			end		
+			-- If not set and SOME match
+			elseif nNumMatches &gt; numWordMatches then
+				if hasPreferences and hasFoundPreferred then
+					foundPreferredType = "contains";
+				end
+				numWordMatches = nNumMatches;
+				potentialMatchContains = sAsset;
+			end
 		end
 	end
 	
@@ -737,6 +772,42 @@ end
 
 function endsWith(str, ending)
    return ending == "" or str:sub(-#ending) == ending
+end
+
+function getWordsIn(sString)
+	local tWords = {};
+	-- Replace specials and numbers with spaces
+	local sStringNoSpecial = sString:lower():gsub("[^%w]+", " "):gsub("%d+", " ");
+	for word in sStringNoSpecial:gmatch("%w+") do 
+		-- Scrap words that are less than two characters
+		if string.len(word) &gt;= 2 then
+			table.insert(tWords, word);
+		end
+	end
+	return tWords;
+end
+
+-- Returns the number of words in tWords1 also in tWords2, returns true if the tWords1 contains all strings in tWords2
+function getNumWordMatch(tWords1, tWords2)
+	local foundCount = 0;
+	local wordCount = #tWords2;
+	
+	for _, word in pairs(tWords2) do
+		if getHasWord(tWords1, word) then
+			foundCount = foundCount + 1;
+		end
+	end
+	
+	return foundCount, (wordCount &gt; 0 and foundCount == wordCount);
+end
+
+function getHasWord(tWords, sWord)
+	for _, word in pairs(tWords) do
+		if word == sWord then
+			return true;
+		end
+	end
+	return false;
 end</LUACode>
     <GroupIndex>0</GroupIndex>
     <Template />
