@@ -14,12 +14,12 @@
     <RulesetList />
     <LoadOrder />
     <Comments />
-    <Announcement />
+    <Announcement>Tokenizer v1.0</Announcement>
     <LogoFile />
     <ImportRuleset>CoreRPG</ImportRuleset>
     <AdvancedDevelopment>true</AdvancedDevelopment>
     <GeneratePath>C:\Users\seans\AppData\Roaming\SmiteWorks\Fantasy Grounds\extensions\Tokenizer.ext</GeneratePath>
-    <AnnouncementFont />
+    <AnnouncementFont>emotefont</AnnouncementFont>
     <AnnouncementIcon />
     <Announcement2 />
     <Announcement2Font />
