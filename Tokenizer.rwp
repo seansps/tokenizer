@@ -2191,6 +2191,9 @@ end</Script>
 				
 				function onInit()
 					setText(Interface.getString("library_recordview_label_tokenizer"));
+					if not Session.IsHost then
+						self.setVisible(false);
+					end
 				end
 			&lt;/script&gt;
 		&lt;/button_masterindex_option&gt;
