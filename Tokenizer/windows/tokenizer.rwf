@@ -2,7 +2,7 @@
   <WindowControls>
     <WindowName>tokenizer</WindowName>
     <ControlName>btn_delete</ControlName>
-    <ZIndex>6</ZIndex>
+    <ZIndex>5</ZIndex>
     <ControlClass>FGButton</ControlClass>
     <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
       {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
@@ -130,7 +130,7 @@ end
   <WindowControls>
     <WindowName>tokenizer</WindowName>
     <ControlName>close</ControlName>
-    <ZIndex>2</ZIndex>
+    <ZIndex>7</ZIndex>
     <ControlClass>FGCustomControl</ControlClass>
     <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
       {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
@@ -141,7 +141,7 @@ end
       {"Name":"CustomClassName","Value":{"@xsi:type":"xsd:string","#text":"close"}},
       {"Name":"CustomProperties","Value":{"@xsi:type":"ArrayOfCustomProperty"}},
       {"Name":"DesignerHeight","Value":{"@xsi:type":"xsd:int","#text":"30"}},
-      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
+      {"Name":"DesignerLocked","Value":{"@xsi:type":"xsd:boolean","#text":"false"}},
       {"Name":"DesignerWidth","Value":{"@xsi:type":"xsd:int","#text":"30"}},
       {"Name":"Disabled"},
       {"Name":"FontColor","Value":{"@xsi:type":"xsd:string","#text":"0;0;0;0"}},
@@ -181,7 +181,7 @@ end
   <WindowControls>
     <WindowName>tokenizer</WindowName>
     <ControlName>label_title</ControlName>
-    <ZIndex>7</ZIndex>
+    <ZIndex>6</ZIndex>
     <ControlClass>FGLabel</ControlClass>
     <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
       {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
@@ -233,7 +233,7 @@ end
   <WindowControls>
     <WindowName>tokenizer</WindowName>
     <ControlName>resize</ControlName>
-    <ZIndex>5</ZIndex>
+    <ZIndex>4</ZIndex>
     <ControlClass>FGCustomControl</ControlClass>
     <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
       {"Name":"AdvancedAnchoring","Value":{"@xsi:type":"ArrayOfAdvancedAnchor"}},
@@ -284,7 +284,7 @@ end
   <WindowControls>
     <WindowName>tokenizer</WindowName>
     <ControlName>results</ControlName>
-    <ZIndex>3</ZIndex>
+    <ZIndex>2</ZIndex>
     <ControlClass>FGSubWindow</ControlClass>
     <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
       {"Name":"Activate","Value":{"@xsi:type":"xsd:boolean","#text":"false"}},
@@ -337,7 +337,7 @@ end
   <WindowControls>
     <WindowName>tokenizer</WindowName>
     <ControlName>settings</ControlName>
-    <ZIndex>4</ZIndex>
+    <ZIndex>3</ZIndex>
     <ControlClass>FGSubWindow</ControlClass>
     <Definition>{"ArrayOfFGControlPropertyInfo":{"@xmlns:xsd":"http://www.w3.org/2001/XMLSchema","@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance","FGControlPropertyInfo":[
       {"Name":"Activate","Value":{"@xsi:type":"xsd:boolean","#text":"true"}},
@@ -441,7 +441,6 @@ end
     <LUACode>local npcPerPage = 20;
 local dbRoot = nil;
 
-local currentIndex = 1;
 local currentPage = 0;
 
 local sCategory = "Tokenizer";
@@ -453,10 +452,15 @@ local tAssets = {};
 local tPreferred = {};
 local tIgnored = {};
 
+-- Currently exported modules have issues if two files have the same basename
+-- To get around this, map basenames to sAssetPaths, so we know if we've used one 
+-- of the same name already
+local tBaseNames = {};
+
 function onInit()
 	-- Reset NPC index to 1
-	currentIndex = 1;
 	currentPage = 0;
+	tBaseNames = {};
 	
 	-- Init assets
 	tAssets = Interface.getAssets("token", "tokens");
@@ -580,6 +584,7 @@ function deleteAllCopies()
 	end
 	
 	currentPage = 0;
+	tBaseNames = {};
 	settings.setVisible(true);
 	results.setVisible(false);
 end
@@ -602,6 +607,11 @@ function searchAssets(sName)
 	local foundPreferredType = "";
 
 	for _, sAsset in pairs(tAssets) do 
+		-- If we've already used an asset with the existing name, switch to that, to prevent collision issues in modules
+		if tBaseNames[basename(sAsset):lower()] ~= nil then
+			sAsset = tBaseNames[basename(sAsset):lower()];
+		end
+		
 		local sAssetNameFull = sAsset:lower();
 		
 		-- First strip everything except what's after the last "/" to get the file name
@@ -639,8 +649,9 @@ function searchAssets(sName)
 
 			-- Direct copy, just return unless there are preferred folders
 			if not hasPreferences and sAssetCopy == sName then
+				tBaseNames[basename(sAsset):lower()] = sAsset;
 				return sAsset;
-			elseif hasPreferences and sAssetCopy == sName and potentialMatch == "" then 
+			elseif hasPreferences and sAssetCopy == sName and potentialMatch == "" then
 				potentialMatch = sAsset;
 				if hasFoundPreferred then
 					foundPreferredType = "match";
@@ -649,6 +660,7 @@ function searchAssets(sName)
 			
 			-- If exact match and found in preferred dir, just return
 			if hasFoundPreferred and sAssetCopy == sName then
+				tBaseNames[basename(sAsset):lower()] = sAsset;
 				return sAsset;
 			end
 			
@@ -692,10 +704,13 @@ function searchAssets(sName)
 	-- If found preferred, return in order of type
 	if foundPreferredType ~= "" then
 		if foundPreferredType == "match" then
+			tBaseNames[basename(potentialMatch):lower()] = potentialMatch;
 			return potentialMatch;
 		elseif foundPreferredType == "startsWith" then
+			tBaseNames[basename(potentialMatchStartsWith):lower()] = potentialMatchStartsWith;
 			return potentialMatchStartsWith;
 		elseif foundPreferredType == "contains" then
+			tBaseNames[basename(potentialMatchContains):lower()] = potentialMatchContains;
 			return potentialMatchContains;
 		end
 		-- endsWith is default
@@ -704,12 +719,16 @@ function searchAssets(sName)
 	
 	-- Didn't find exact match, pick from above
 	if potentialMatch ~= "" then
+		tBaseNames[basename(potentialMatch):lower()] = potentialMatch;
 		return potentialMatch;
 	elseif potentialMatchStartsWith ~= "" then
+		tBaseNames[basename(potentialMatchStartsWith):lower()] = potentialMatchStartsWith;
 		return potentialMatchStartsWith;
 	elseif potentialMatchContains ~= "" then
+		tBaseNames[basename(potentialMatchContains):lower()] = potentialMatchContains;
 		return potentialMatchContains;
 	elseif potentialMatchEndsWith ~= "" then
+		tBaseNames[basename(potentialMatchEndsWith):lower()] = potentialMatchEndsWith;
 		return potentialMatchEndsWith;
 	else
 		return "";
